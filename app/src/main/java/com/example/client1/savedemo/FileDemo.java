@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -26,14 +27,13 @@ import java.io.OutputStreamWriter;
 
 public class FileDemo extends Activity implements View.OnClickListener {
 
-    /**
-     * Called when the activity is first created.
-     */
+    Button copy,send;
+    static  int filename=0;
 
-    private final static String STORETEXT = "storetext.txt";
-    Context context;
-
-    Button copy;
+    public FileDemo()
+    {
+        filename++;
+    }
 
     private ClipboardManager myClipboard;
     private ClipData myClip;
@@ -59,8 +59,19 @@ public class FileDemo extends Activity implements View.OnClickListener {
             public void onClick(View v)
             {
                 // String text;
-                String  text = e1.getText().toString();
+                String  text =
+                         t1.getText().toString()+"    :   "+e1.getText().toString()+"\n"+
+                        t2.getText().toString()+"    :   "+e2.getText().toString()+"\n"+
+                        t3.getText().toString()+"    :   "+e3.getText().toString()+"\n"+
+                        t4.getText().toString()+"    :   "+e4.getText().toString()+"\n"+
+                        t5.getText().toString()+"    :   "+e5.getText().toString()+"\n"+
+                        t6.getText().toString()+"    :   "+e6.getText().toString()+"\n"+
+                        t7.getText().toString()+"    :   "+e7.getText().toString()+"\n"+
+                        t8.getText().toString()+"    :   "+e8.getText().toString()+"\n"+
+                        t9.getText().toString()+"    :   "+e9.getText().toString()+"\n";
                 myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+               /* myClip = ClipData.newPlainText("text", text);
                 myClipboard.setPrimaryClip(myClip);
 
                 String  text2 = e2.getText().toString();
@@ -93,23 +104,52 @@ public class FileDemo extends Activity implements View.OnClickListener {
 
                 String  text9 = e9.getText().toString();
                 myClip = ClipData.newPlainText("text", text9);
-                myClipboard.setPrimaryClip(myClip);
+                myClipboard.setPrimaryClip(myClip);*/
 
 
                 Toast.makeText(getApplicationContext(), "Text Copied successfully", Toast.LENGTH_SHORT).show();
             }
         });
 
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                String main= t1.getText().toString()+"\t"+e1.getText().toString()+"\n"+
+                             t2.getText().toString()+"  :    "+e2.getText().toString()+"\n"+
+                             t3.getText().toString()+"  :    "+e3.getText().toString()+"\n"+
+                             t4.getText().toString()+"  :    "+e4.getText().toString()+"\n"+
+                             t5.getText().toString()+"  :    "+e5.getText().toString()+"\n"+
+                             t6.getText().toString()+"  :    "+e6.getText().toString()+"\n"+
+                             t7.getText().toString()+"  :    "+e7.getText().toString()+"\n"+
+                             t8.getText().toString()+"  :    "+e8.getText().toString()+"\n"+
+                             t9.getText().toString()+"  :    "+e9.getText().toString()+"\n";
+
+                if (!main.equals("") && main.length() != 0) shareText(main);
+
+            }
+        });
+
+
+    }
+
+    private void shareText(String text)
+    {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");// Plain format text
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+       // sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        startActivity(Intent.createChooser(sharingIntent, "Share Text Using"));
 
     }
 
     public void initView() {
          copy=(Button)findViewById(R.id.copy);
+        send=(Button)findViewById(R.id.send);
 
         reusltRextView = (TextView) findViewById(R.id.resultTextView);
 
         myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-
 
         e1 = (EditText) findViewById(R.id.textbox);
         e2 = (EditText) findViewById(R.id.editText2);
@@ -141,55 +181,60 @@ public class FileDemo extends Activity implements View.OnClickListener {
         //read.setOnClickListener(this);
     }
 
-    public void saveClicked(View v) {
+    public void saveClicked(View v)
+    {
         try {
-            File logFile = new File("sdcard/vinod.txt");
-            if (!logFile.exists()) {
-                try {
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+            File logFile = new File("sdcard/ainod"+ts+".txt");
+            if (!logFile.exists())
+            {
+                try
+                {
                     logFile.createNewFile();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
+
             try {
                 //BufferedWriter for performance, true to set append to file flag
                 BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
                 buf.append(t1.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e1.getText().toString());
                 buf.append("\n\n");
                 buf.append(t2.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e2.getText().toString());
                 buf.append("\n\n");
                 buf.append(t3.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e3.getText().toString());
                 buf.append("\n\n");
                 buf.append(t4.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e4.getText().toString());
                 buf.append("\n\n");
 
                 buf.append(t5.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e5.getText().toString());
                 buf.append("\n\n");
                 buf.append(t6.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e6.getText().toString());
                 buf.append("\n\n");
                 buf.append(t7.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e7.getText().toString());
                 buf.append("\n\n");
                 buf.append(t8.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e8.getText().toString());
                 buf.append("\n\n");
                 buf.append(t9.getText().toString());
-                buf.append("---->" + "\t");
+                buf.append("\t");
                 buf.append(e9.getText().toString());
                 buf.append("\n\n");
 
@@ -200,35 +245,13 @@ public class FileDemo extends Activity implements View.OnClickListener {
                 e.printStackTrace();
             }
 
-
-            // OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
-            // File logFile = new File("sdcard/Foodgenielog.txt");
-//            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(STORETEXT, 0));
-//            out.write(t1.getText().toString());
-//            out.write("\t\t\t\t\t\t\t\t\t\t\t\t");
-//            out.write(e1.getText().toString());
-//            out.write("\n\n");
-//            out.write(t2.getText().toString());
-//            out.write("\t\t\t\t\t\t\t\t\t\t\t\t");
-//            out.write(e2.getText().toString());
-//            out.write("\n\n");
-//            out.write(t3.getText().toString());
-//            out.write("\t\t\t\t\t\t\t\t\t\t\t\t");
-//            out.write(e3.getText().toString());
-//            out.write("\n\n");
-//            out.write(t4.getText().toString());
-//            out.write("\t\t\t\t\t\t\t\t\t\t\t\t");
-//            out.write(e4.getText().toString());
-//            out.write("\n\n");
-//
-//            out.close();
             Toast.makeText(this, "The contents are saved in the file.", Toast.LENGTH_LONG).show();
         } catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
     }
 
-    public void readFileInEditor() {
+   /* public void readFileInEditor() {
         try {
             InputStream in = openFileInput("sdcard/vinod.txt");
             if (in != null) {
@@ -248,14 +271,11 @@ public class FileDemo extends Activity implements View.OnClickListener {
         } catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-           /* case R.id.buttonRead:
-                readFileInEditor();
-                break;*/
 
             case R.id.save:
                 saveClicked(view);
@@ -263,7 +283,6 @@ public class FileDemo extends Activity implements View.OnClickListener {
         }
 
     }
-
 
     private static final int REQUEST_WRITE_STORAGE = 112;
 
